@@ -1,0 +1,12 @@
+node_modules/
+.wrangler/
+.claude/
+proxy/
+tests/
+*.pem
+.env
+.env.local
+.DS_Store
+CWS_SUBMISSION.md
+STORE_LISTING.md
+PROGRESS.md
