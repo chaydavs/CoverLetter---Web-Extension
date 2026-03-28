@@ -12,8 +12,11 @@ import { sanitizeText } from '../utils/sanitize.js';
 import { latexToPlainText } from '../utils/latex-preview.js';
 import { AppError, Errors, createError } from '../utils/errors.js';
 
-/** Cloudflare Worker proxy URL — update after deployment */
+/** Cloudflare Worker proxy URL */
 const PROXY_URL = 'https://covercraft-proxy.chaydav4.workers.dev';
+
+/** Open side panel when extension icon is clicked */
+chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
 
 /** URL patterns for supported job boards */
 const SITE_PATTERNS = [

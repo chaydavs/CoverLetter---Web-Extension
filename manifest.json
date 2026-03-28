@@ -1,18 +1,22 @@
 {
   "manifest_version": 3,
   "name": "CoverCraft — AI Cover Letters in 60 Seconds",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Click on any job posting. Get a tailored cover letter. Download as PDF. No login required.",
-  "permissions": ["activeTab", "storage", "scripting"],
+  "permissions": ["activeTab", "tabs", "storage", "scripting", "sidePanel"],
+  "host_permissions": ["<all_urls>"],
   "action": {
-    "default_popup": "popup/popup.html"
+    "default_title": "Open CoverCraft"
+  },
+  "side_panel": {
+    "default_path": "sidepanel/sidepanel.html"
   },
   "background": {
     "service_worker": "background/service-worker.js",
     "type": "module"
   },
   "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'none'; connect-src https://covercraft-proxy.chaydav4.workers.dev https://api.anthropic.com https://latexonline.cc;"
+    "extension_pages": "script-src 'self'; object-src 'none'; connect-src https://covercraft-proxy.chaydav4.workers.dev https://api.anthropic.com https://latexonline.cc https://latex.ytotech.com;"
   },
   "icons": {
     "16": "assets/icons/icon-16.png",

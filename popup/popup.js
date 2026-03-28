@@ -96,9 +96,13 @@ function setupEventListeners() {
   });
   savePasteBtn.addEventListener('click', handlePasteSave);
 
-  // Pill buttons (tone & length)
-  document.querySelectorAll('.pill-group').forEach(group => {
-    group.addEventListener('click', handlePillClick);
+  // Dropdown selects (tone, length, font)
+  document.querySelectorAll('.select').forEach(select => {
+    select.addEventListener('change', (e) => {
+      const pref = e.target.dataset.pref;
+      const value = e.target.value;
+      savePreferences({ [pref]: value });
+    });
   });
 
   // Generate
@@ -130,6 +134,19 @@ function setupEventListeners() {
   });
   $('#regenerate-btn').addEventListener('click', handleGenerate);
   $('#edit-toggle').addEventListener('click', toggleEdit);
+
+  // Newsletter signup
+  const newsletterBtn = $('#newsletter-btn');
+  if (newsletterBtn) {
+    newsletterBtn.addEventListener('click', () => {
+      const email = $('#newsletter-email')?.value?.trim();
+      if (!email || !email.includes('@')) return;
+      // Store email locally for now — connect to a real service later
+      chrome.storage.local.set({ covercraft_newsletter: email });
+      $('#newsletter-form').hidden = true;
+      $('#newsletter-success').hidden = false;
+    });
+  }
 
   // Settings
   $('#settings-btn').addEventListener('click', openSettings);
@@ -437,28 +454,13 @@ function showManualInput() {
 async function loadPreferences() {
   const prefs = await getPreferences();
 
-  document.querySelectorAll('.pill-group').forEach(group => {
-    const pref = group.dataset.pref; // 'tone' or 'length'
+  document.querySelectorAll('.select').forEach(select => {
+    const pref = select.dataset.pref;
     const value = prefs[pref];
-
-    group.querySelectorAll('.pill').forEach(pill => {
-      pill.classList.toggle('active', pill.dataset.value === value);
-    });
+    if (value) select.value = value;
   });
 }
 
-function handlePillClick(e) {
-  const pill = e.target.closest('.pill');
-  if (!pill) return;
-
-  const group = pill.closest('.pill-group');
-  group.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
-  pill.classList.add('active');
-
-  const pref = group.dataset.pref;
-  const value = pill.dataset.value;
-  savePreferences({ [pref]: value });
-}
 
 // ===== GENERATION =====
 
@@ -476,9 +478,9 @@ async function handleGenerate() {
   }
 
   // Gather preferences
-  const tone = document.querySelector('.pill-group[data-pref="tone"] .pill.active')?.dataset.value || 'professional';
-  const length = document.querySelector('.pill-group[data-pref="length"] .pill.active')?.dataset.value || 'medium';
-  const font = document.querySelector('.pill-group[data-pref="font"] .pill.active')?.dataset.value || 'default';
+  const tone = $('#pref-tone')?.value || 'professional';
+  const length = $('#pref-length')?.value || 'medium';
+  const font = $('#pref-font')?.value || 'default';
 
   state = 'GENERATING';
   saveGeneratingState(jobData, tone, length, font);
@@ -652,12 +654,13 @@ async function openSettings() {
   overlay.hidden = false;
   requestAnimationFrame(() => overlay.classList.add('visible'));
 
-  // Populate resume info
+  // Populate resume info as a clean file widget
   const resume = await getResume();
   if (resume) {
-    const date = new Date(resume.savedAt).toLocaleDateString();
-    const preview = resume.text.substring(0, 80) + (resume.text.length > 80 ? '...' : '');
-    $('#resume-info').textContent = `"${preview}" — Saved on ${date}`;
+    const date = new Date(resume.savedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    const charCount = resume.text.length;
+    const sizeLabel = charCount > 1000 ? `${(charCount / 1000).toFixed(1)}k chars` : `${charCount} chars`;
+    $('#resume-info').textContent = `Resume · ${sizeLabel} · Saved ${date}`;
   }
 
   // Populate storage usage

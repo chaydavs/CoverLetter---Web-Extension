@@ -2,9 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=400">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CoverCraft</title>
-  <link rel="stylesheet" href="popup.css">
+  <link rel="stylesheet" href="../popup/popup.css">
+  <style>
+    /* Side panel overrides — full height, scrollable */
+    body {
+      width: 100%;
+      min-height: 100vh;
+      max-height: none;
+    }
+    .letter-preview {
+      max-height: 50vh;
+    }
+  </style>
 </head>
 <body>
   <!-- ===== VIEW: SETUP (first time, no resume) ===== -->
@@ -227,7 +238,7 @@
         <button id="clear-all-btn" class="btn btn-danger btn-sm">Clear All Data</button>
       </div>
 
-      <p class="version-text">v0.1.0</p>
+      <p class="version-text">v0.2.0</p>
     </div>
   </div>
 
@@ -242,8 +253,7 @@
     </div>
   </div>
 
-  <!-- pdf.js for resume parsing — vendor this file into lib/ -->
   <script src="../lib/pdf.min.js"></script>
-  <script type="module" src="popup.js"></script>
+  <script type="module" src="../popup/popup.js"></script>
 </body>
 </html>
