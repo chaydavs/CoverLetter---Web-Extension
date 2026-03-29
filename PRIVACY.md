@@ -1,8 +1,8 @@
-# CoverCraft Privacy Policy
+# Pave Privacy Policy
 
 **Last updated: March 28, 2026**
 
-CoverCraft is built with privacy as a core design principle. Here's exactly what happens with your data — no legal jargon, just plain English.
+Pave is built with privacy as a core design principle. Here's exactly what happens with your data — no legal jargon, just plain English.
 
 ## What data we collect
 
@@ -41,7 +41,7 @@ If you use your own Anthropic API key, requests go **directly** to Anthropic's A
 
 ## How to delete your data
 
-1. Open the CoverCraft extension
+1. Open the Pave extension
 2. Click the gear icon (Settings)
 3. Click "Clear All Data"
 

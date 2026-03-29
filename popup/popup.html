@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=400">
-  <title>CoverCraft</title>
+  <title>Pave</title>
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
   <!-- ===== VIEW: SETUP (first time, no resume) ===== -->
   <div id="view-setup" class="view" hidden>
     <div class="setup-container">
-      <h1 class="wordmark">CoverCraft</h1>
-      <p class="tagline">Upload your resume once. Get tailored cover letters forever.</p>
+      <h1 class="wordmark">Pave</h1>
+      <p class="tagline">Upload your resume once. Pave your way to every job.</p>
 
       <div id="drop-zone" class="drop-zone" tabindex="0" role="button" aria-label="Upload resume PDF">
         <div class="drop-zone-content">
@@ -57,7 +57,7 @@
   <!-- ===== VIEW: READY (resume exists, on a job page) ===== -->
   <div id="view-ready" class="view" hidden>
     <div class="top-bar">
-      <span class="wordmark-small">CoverCraft</span>
+      <span class="wordmark-small">Pave</span>
       <div class="top-bar-actions">
         <button id="refresh-btn" class="icon-btn" aria-label="Refresh page data" title="Rescan this page">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -95,7 +95,7 @@
         </div>
       </div>
       <div id="no-job" hidden>
-        <p class="no-job-text">Navigate to a job posting, then click CoverCraft</p>
+        <p class="no-job-text">Navigate to a job posting, then click Pave</p>
       </div>
     </div>
 
@@ -156,9 +156,14 @@
           </button>
         </div>
       </div>
-      <div id="tracker-warning" class="tracker-warning" hidden>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-        <span>Storage almost full. Export your data.</span>
+      <div class="storage-bar-container">
+        <div class="storage-bar-labels">
+          <span id="storage-label" class="storage-label">0 KB used</span>
+          <span class="storage-label">5 MB</span>
+        </div>
+        <div class="storage-bar">
+          <div id="storage-fill" class="storage-fill" style="width: 0%"></div>
+        </div>
       </div>
       <div id="tracker-list" class="tracker-list"></div>
       <div id="tracker-empty" class="tracker-empty">
@@ -249,7 +254,7 @@
 
       <details class="settings-section">
         <summary>Use your own API key</summary>
-        <p class="settings-hint">Optional. By default, CoverCraft uses our servers. With your own key, requests go directly to Claude.</p>
+        <p class="settings-hint">Optional. By default, Pave uses our servers. With your own key, requests go directly to Claude.</p>
         <div class="api-key-row">
           <input id="api-key-input" type="password" placeholder="sk-ant-..." class="input input-sm">
           <button id="save-key-btn" class="btn btn-secondary btn-sm">Save</button>

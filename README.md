@@ -1,15 +1,15 @@
-# CoverCraft
+# Pave
 
 **AI cover letters in 60 seconds. No login. No subscription. Just results.**
 
-You're applying to 100 jobs. Each cover letter takes 20 minutes. That's 33 hours of writing. CoverCraft does it in 60 seconds — click the extension on any job posting, get a tailored cover letter, download as a professionally typeset PDF.
+You're applying to 100 jobs. Each cover letter takes 20 minutes. That's 33 hours of writing. Pave does it in 60 seconds — click the extension on any job posting, get a tailored cover letter, download as a professionally typeset PDF.
 
 ## How it works
 
 1. Install the Chrome extension
 2. Upload your resume once (it stays on your device — we never see it)
 3. Navigate to any job posting
-4. Click CoverCraft → get a tailored cover letter → download as PDF
+4. Click Pave → get a tailored cover letter → download as PDF
 
 That's it. No account. No signup. No subscription.
 
@@ -46,7 +46,7 @@ cd covercraft-ext
 1. Go to `chrome://extensions`
 2. Enable Developer Mode
 3. Click "Load unpacked" and select the `covercraft-ext/` folder
-4. Click the CoverCraft icon on any job page
+4. Click the Pave icon on any job page
 
 #### Deploy the API proxy
 ```

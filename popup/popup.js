@@ -184,16 +184,16 @@ function setupEventListeners() {
         if (res.ok || res.status === 201 || res.status === 409) {
           $('#newsletter-form').hidden = true;
           $('#newsletter-success').hidden = false;
-          chrome.storage.local.set({ covercraft_newsletter: email });
+          chrome.storage.local.set({ pave_newsletter: email });
         } else {
           // Fallback: save locally if Supabase fails
-          chrome.storage.local.set({ covercraft_newsletter: email });
+          chrome.storage.local.set({ pave_newsletter: email });
           $('#newsletter-form').hidden = true;
           $('#newsletter-success').hidden = false;
         }
       } catch {
         // Offline fallback
-        chrome.storage.local.set({ covercraft_newsletter: email });
+        chrome.storage.local.set({ pave_newsletter: email });
         $('#newsletter-form').hidden = true;
         $('#newsletter-success').hidden = false;
       }
@@ -510,9 +510,19 @@ async function addToTracker(jobData) {
 async function checkStorageWarning() {
   const usage = await getStorageUsage();
   const ratio = usage.used / usage.quota;
-  const warningEl = $('#tracker-warning');
-  if (warningEl) {
-    warningEl.hidden = ratio < STORAGE_WARNING_THRESHOLD;
+  const fillEl = $('#storage-fill');
+  const labelEl = $('#storage-label');
+
+  if (fillEl) {
+    fillEl.style.width = `${Math.min(ratio * 100, 100).toFixed(1)}%`;
+    fillEl.classList.remove('warning', 'danger');
+    if (ratio >= 0.9) fillEl.classList.add('danger');
+    else if (ratio >= 0.7) fillEl.classList.add('warning');
+  }
+
+  if (labelEl) {
+    const usedKB = (usage.used / 1024).toFixed(1);
+    labelEl.textContent = `${usedKB} KB used`;
   }
 }
 
