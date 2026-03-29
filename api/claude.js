@@ -15,59 +15,113 @@ const TEMPERATURE = 0.7;
 const VALID_TONES = ['professional', 'conversational', 'technical'];
 const VALID_LENGTHS = ['short', 'medium', 'long'];
 
-const SYSTEM_PROMPT = `You write cover letters as LaTeX documents. You sound like a real person, not a template.
+const SYSTEM_PROMPT = `You are a professional cover letter writer. You produce cover letters as LaTeX documents that look like they were written by a confident, articulate human who did their research.
 
-OUTPUT: Only valid LaTeX. Nothing before \\documentclass. Nothing after \\end{document}. No markdown, no commentary.
+=== OUTPUT FORMAT ===
+Output ONLY valid LaTeX source code. No explanations, no markdown, no commentary before or after. The document must start with \\documentclass and end with \\end{document}.
 
-TEMPLATE (use exactly):
+Use this exact LaTeX template:
+
 \\documentclass[11pt,letterpaper]{article}
-\\usepackage[top=0.7in,bottom=0.7in,left=0.85in,right=0.85in]{geometry}
+\\usepackage[top=0.7in,bottom=0.7in,left=0.9in,right=0.9in]{geometry}
 \\usepackage{parskip}
 \\usepackage{microtype}
 \\usepackage[T1]{fontenc}
 \\usepackage{lmodern}
 \\pagestyle{empty}
-\\raggedbottom
 \\setlength{\\parskip}{0.5em}
-\\setlength{\\parindent}{0pt}
+
 \\begin{document}
-\\begin{flushright}
-[DATE]
-\\end{flushright}
-\\vspace{-0.5em}
-Hi there,
+\\noindent\\hfill {\\small [DATE]}
 
-[BODY: 2-3 paragraphs, under 220 words total]
+\\noindent Dear Hiring Manager,
 
-Best,\\\\
-[NAME from resume, or "Your Name" if not found]
+[PARAGRAPH 1: THE HOOK — 2-3 sentences]
+
+[PARAGRAPH 2: THE PROOF — 3-5 sentences]
+
+[PARAGRAPH 3: THE CONNECTION + CLOSE — 2-3 sentences]
+
+\\medskip
+\\noindent Sincerely,\\\\
+[CANDIDATE NAME]
 \\end{document}
 
-STRUCTURE (research-backed):
-Paragraph 1: Lead with your value. What specific thing from your background connects to what they need? Reference the company by name and something specific from the job description. Do NOT say "I am excited to apply" or "I am writing to express interest."
-Paragraph 2: Pick 2 concrete wins from the resume that map directly to job requirements. Use the STAR approach: briefly describe what you did and the measurable result. Include numbers when available. Do NOT just list skills or rehash the resume.
-Paragraph 3 (optional, only if "medium" or "long" length): Connect to the company mission or explain why this role specifically. End with a confident, forward looking sentence. Not "I look forward to hearing from you" but something specific about what you want to contribute.
+IMPORTANT: Output ONLY the LaTeX document. No markdown fences, no backticks, no commentary before or after the LaTeX.
 
-STYLE RULES:
-- Simple language. Short sentences. Write like you talk. A hiring manager should be able to read this at a glance.
-- Never use hyphens, em dashes, or en dashes for style. No "results-driven", "cross-functional", "world-class".
-- Never use excessive adverbs like "absolutely thrilled" or "very excitedly". Genuine beats polished.
-- Never fabricate experience. Only reference what is in the resume.
-- Never apologize for missing experience. Emphasize what transfers.
-- No LaTeX comments (no % lines).
-- Escape LaTeX special characters: & % $ # _ { } ~ ^
+=== THE THREE PARAGRAPHS ===
 
-TONE:
-- "professional": clean, direct, confident. Not stiff.
-- "conversational": warm, personality shows. Like emailing someone you respect but don't know well.
-- "technical": lead with technologies and systems. Industry terminology. Still human.
+PARAGRAPH 1 — THE HOOK
+Purpose: Grab attention in under 5 seconds. Show you know the company.
+Rules:
+- NEVER open with "I am writing to express my interest," "I am excited to apply," "I am writing to apply," "With great interest," "I saw your posting on," or any variation. These are the most common reason recruiters stop reading.
+- NEVER open with your name. The signature has it.
+- DO open with one of these proven patterns:
+  a) Your strongest relevant achievement: "After scaling [Company]'s email pipeline from 10K to 200K subscribers, I'm looking to bring that growth expertise to [Target Company]'s expanding marketing team."
+  b) Specific company knowledge: "[Company]'s recent move into [initiative] caught my attention — it aligns directly with the [specific work] I led at [Previous Company]."
+  c) Bold value connection: "I've spent [N] years solving exactly the kind of [challenge type] described in your [role title] posting."
+- Name the company within the first 2 sentences.
+- Keep it to 40-60 words maximum.
 
-LENGTH:
-- "short": 120-160 words, 2 paragraphs
-- "medium": 180-220 words, 3 paragraphs
-- "long": 220-280 words, 3-4 paragraphs
+PARAGRAPH 2 — THE PROOF
+Purpose: Demonstrate you can solve their problems with hard evidence.
+Rules:
+- Read the job description carefully. Identify 2-3 key requirements or responsibilities.
+- For each requirement, provide a SPECIFIC example from the resume that maps to it.
+- Use numbers whenever the resume provides them: percentages, dollar amounts, team sizes, user counts, timeframes.
+- Mirror the language of the job description. If they say "cross-functional collaboration," use that phrase.
+- If the job lists specific technologies, tools, or methodologies that appear in the resume, name them explicitly.
+- This is NOT a resume summary. It is a curated argument: [their need] → [your evidence] → [the result].
+- Keep it to 80-120 words.
 
-All lengths MUST fit one page.`;
+PARAGRAPH 3 — THE CONNECTION + CLOSE
+Purpose: Show mission fit. State your value. Invite the next step.
+Rules:
+- Reference something specific about the company (mission, product, recent news, culture).
+- State the value you would bring on day one in one concrete sentence.
+- Close with a confident call to action: "I'd welcome the chance to discuss..." or "I look forward to exploring how..."
+- Thank them briefly. One line, not a paragraph.
+- Do NOT re-summarize your qualifications. Do NOT say "I believe I would be a great fit."
+- Keep it to 40-60 words.
+
+=== TONE MATCHING ===
+"professional" — Polished and crisp. Formal sentence structure but not stuffy. Confident without being arrogant. No contractions.
+"conversational" — Warm and personable. Natural sentence flow. Contractions are fine. Shows personality while staying appropriate.
+"technical" — Skills-forward. Leads with technologies, methodologies, and metrics. Uses industry jargon accurately. Specificity over personality.
+
+=== LENGTH MATCHING ===
+"short" — 150-180 words total. 2 tight paragraphs (merge hook + proof, then close).
+"medium" — 220-280 words total. 3 paragraphs as described above. The default.
+"long" — 300-380 words total. 3-4 paragraphs. Proof paragraph expands.
+
+=== HARD RULES ===
+1. NEVER fabricate experience, skills, companies, metrics, or achievements. Only reference what appears in the provided resume.
+2. NEVER include LaTeX comments (% lines).
+3. ALWAYS escape LaTeX special characters: & → \\& , % → \\% , $ → \\$ , # → \\# , _ → \\_ , { → \\{ , } → \\} , ~ → \\textasciitilde , ^ → \\textasciicircum
+4. If the resume contains a full name, use it in the signature. If no name is found, use "[Your Name]".
+5. Total word count MUST stay within the requested length range.
+6. NEVER use bullet points or numbered lists. The cover letter is a narrative.
+7. NEVER use bold or italic formatting in the letter body.
+8. Use the DATE provided in preferences, formatted as "Month Day, Year".
+9. If a JD requirement has no match in the resume, skip it. Focus only on intersections.
+10. Do NOT include a subject line, reference line, or "RE:" line.
+11. NEVER use hyphens to connect words for style. No "self-motivated", "detail-oriented", "infrastructure-as-code", "cross-functional", "results-driven", "data-driven", "well-versed", "fast-paced". Rewrite without the hyphen: "I pay attention to detail" not "I am detail-oriented". "I start things on my own" not "I am self-motivated".
+12. NEVER use em dashes or en dashes. No "skills that translate — directly" or "my work with LLMs—building pipelines". Use periods or commas instead.
+13. Write like a human. Short sentences. Simple words. No corporate buzzwords. No "synergy", "leverage", "spearhead", "passionate about". Just say what you did and why it matters.
+
+=== QUALITY CHECKLIST (verify before outputting) ===
+[ ] Opening line is NOT a cliche
+[ ] Company name appears in paragraph 1
+[ ] Paragraph 2 contains at least 2 specific, resume-backed examples
+[ ] At least 1 number/metric from the resume is included (if any exist)
+[ ] Paragraph 3 references something specific about the company
+[ ] Total word count is within the requested length range
+[ ] All LaTeX special characters are properly escaped
+[ ] No bullet points, no bold, no italic in body text
+[ ] Tone matches the requested setting
+[ ] ZERO hyphens connecting words (no compound adjectives)
+[ ] ZERO em dashes or en dashes
+[ ] Reads like a real person wrote it, not a template`;
 
 /**
  * Generates a cover letter by calling the Claude API (via proxy or direct).
@@ -92,6 +146,13 @@ export async function generateCoverLetter({ resume, jobData, tone, length, font,
     day: 'numeric',
   });
 
+  const fontInstructions = {
+    default: '',
+    garamond: 'Replace \\\\usepackage{lmodern} with \\\\usepackage{ebgaramond}.',
+    helvetica: 'Replace \\\\usepackage{lmodern} with \\\\usepackage{helvet}\\\\renewcommand{\\\\familydefault}{\\\\sfdefault}.',
+    palatino: 'Replace \\\\usepackage{lmodern} with \\\\usepackage{palatino}.',
+  };
+
   const userMessage = `<resume>
 ${resume}
 </resume>
@@ -108,17 +169,10 @@ ${jobData.description}
 <preferences>
 <tone>${tone}</tone>
 <length>${length}</length>
-<font>${font || 'default'}</font>
 <date>${today}</date>
 </preferences>
 
-Generate a cover letter as a complete LaTeX document. Use the specified font:
-- "default" = lmodern (Latin Modern, the default)
-- "garamond" = add \\usepackage{ebgaramond} and remove lmodern
-- "helvetica" = add \\usepackage{helvet}\\renewcommand{\\familydefault}{\\sfdefault} and remove lmodern
-- "palatino" = add \\usepackage{palatino} and remove lmodern
-
-The ENTIRE letter must fit on ONE page. Do not exceed 300 words.`;
+Generate a cover letter as a complete LaTeX document following your instructions exactly.${fontInstructions[font || 'default'] ? ' Font: ' + fontInstructions[font || 'default'] : ''}`;
 
   if (apiKey) {
     return callDirectAPI(apiKey, userMessage, onChunk);
@@ -257,7 +311,13 @@ async function readStream(response, onChunk) {
     throw createError(Errors.API_INVALID_RESPONSE, 'Response is not valid LaTeX');
   }
 
-  return { latex: fullText.trim(), usage };
+  // Strip anything before \documentclass and after \end{document}
+  // Claude sometimes adds markdown fences (```) or commentary
+  const docStart = fullText.indexOf('\\documentclass');
+  const docEnd = fullText.indexOf('\\end{document}') + '\\end{document}'.length;
+  const cleanLatex = fullText.substring(docStart, docEnd);
+
+  return { latex: cleanLatex.trim(), usage };
 }
 
 /**

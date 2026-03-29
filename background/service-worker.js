@@ -18,6 +18,29 @@ const PROXY_URL = 'https://covercraft-proxy.chaydav4.workers.dev';
 /** Open side panel when extension icon is clicked */
 chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
 
+/** Safely send message to side panel — silently fails if panel isn't open */
+function notifyPanel(message) {
+  chrome.runtime.sendMessage(message).catch(() => {});
+}
+
+/** Notify side panel when user switches tabs or navigates to a new page */
+chrome.tabs.onActivated.addListener(async (activeInfo) => {
+  try {
+    const tab = await chrome.tabs.get(activeInfo.tabId);
+    notifyPanel({ type: 'TAB_CHANGED', payload: { url: tab.url || '' } });
+  } catch { /* tab may not exist */ }
+});
+
+chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
+  if (changeInfo.status === 'complete') {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabs[0]?.id === tabId) {
+        notifyPanel({ type: 'TAB_CHANGED', payload: { url: tabs[0].url || '' } });
+      }
+    });
+  }
+});
+
 /** URL patterns for supported job boards */
 const SITE_PATTERNS = [
   { pattern: /linkedin\.com\/jobs/i, file: 'content/scrapers/linkedin.js' },

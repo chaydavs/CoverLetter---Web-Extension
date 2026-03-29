@@ -19,6 +19,8 @@ let currentResult = null;
 const DRAFT_KEY = 'covercraft_draft';
 const RESULT_KEY = 'covercraft_result';
 const GENERATING_KEY = 'covercraft_generating';
+const TRACKER_KEY = 'covercraft_tracker';
+const STORAGE_WARNING_THRESHOLD = 0.8; // Warn at 80% of 5MB
 
 // ===== DOM REFS =====
 const $ = (sel) => document.querySelector(sel);
@@ -46,6 +48,7 @@ async function init() {
 
   showView('ready');
   loadPreferences();
+  loadTracker();
   await restoreDraft();
   startScraping();
 }
@@ -105,6 +108,23 @@ function setupEventListeners() {
     });
   });
 
+  // Refresh button — rescan current page
+  const refreshBtn = $('#refresh-btn');
+  if (refreshBtn) {
+    refreshBtn.addEventListener('click', () => {
+      currentJobData = null;
+      clearDraft();
+      startScraping(true);
+    });
+  }
+
+  // Listen for tab changes from service worker (auto-rescrape)
+  chrome.runtime.onMessage.addListener((message) => {
+    if (message.type === 'TAB_CHANGED' && state === 'READY') {
+      startScraping(true);
+    }
+  });
+
   // Generate
   $('#generate-btn').addEventListener('click', handleGenerate);
 
@@ -135,18 +155,54 @@ function setupEventListeners() {
   $('#regenerate-btn').addEventListener('click', handleGenerate);
   $('#edit-toggle').addEventListener('click', toggleEdit);
 
-  // Newsletter signup
+  // Newsletter signup — sends to Supabase
   const newsletterBtn = $('#newsletter-btn');
   if (newsletterBtn) {
-    newsletterBtn.addEventListener('click', () => {
-      const email = $('#newsletter-email')?.value?.trim();
-      if (!email || !email.includes('@')) return;
-      // Store email locally for now — connect to a real service later
-      chrome.storage.local.set({ covercraft_newsletter: email });
-      $('#newsletter-form').hidden = true;
-      $('#newsletter-success').hidden = false;
+    newsletterBtn.addEventListener('click', async () => {
+      const emailInput = $('#newsletter-email');
+      const email = emailInput?.value?.trim();
+      if (!email || !email.includes('@') || !email.includes('.')) return;
+
+      newsletterBtn.disabled = true;
+      newsletterBtn.textContent = '...';
+
+      try {
+        const SUPABASE_URL = 'SUPABASE_URL_PLACEHOLDER';
+        const SUPABASE_KEY = 'SUPABASE_KEY_PLACEHOLDER';
+
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/subscribers`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`,
+            'Prefer': 'return=minimal',
+          },
+          body: JSON.stringify({ email, source: 'extension', subscribed_at: new Date().toISOString() }),
+        });
+
+        if (res.ok || res.status === 201 || res.status === 409) {
+          $('#newsletter-form').hidden = true;
+          $('#newsletter-success').hidden = false;
+          chrome.storage.local.set({ covercraft_newsletter: email });
+        } else {
+          // Fallback: save locally if Supabase fails
+          chrome.storage.local.set({ covercraft_newsletter: email });
+          $('#newsletter-form').hidden = true;
+          $('#newsletter-success').hidden = false;
+        }
+      } catch {
+        // Offline fallback
+        chrome.storage.local.set({ covercraft_newsletter: email });
+        $('#newsletter-form').hidden = true;
+        $('#newsletter-success').hidden = false;
+      }
     });
   }
+
+  // Tracker export
+  const exportBtn = $('#export-tracker-btn');
+  if (exportBtn) exportBtn.addEventListener('click', exportTrackerCSV);
 
   // Settings
   $('#settings-btn').addEventListener('click', openSettings);
@@ -378,15 +434,117 @@ async function restoreResult() {
   return false;
 }
 
+// ===== APPLICATION TRACKER =====
+
+async function loadTracker() {
+  const result = await chrome.storage.local.get(TRACKER_KEY);
+  const items = result[TRACKER_KEY] || [];
+
+  const listEl = $('#tracker-list');
+  const emptyEl = $('#tracker-empty');
+  const countEl = $('#tracker-count');
+
+  if (!listEl) return;
+
+  countEl.textContent = items.length;
+
+  if (items.length === 0) {
+    listEl.hidden = true;
+    emptyEl.hidden = false;
+    return;
+  }
+
+  listEl.hidden = false;
+  emptyEl.hidden = true;
+
+  // Show most recent first, max 10
+  const recent = items.slice(-10).reverse();
+  listEl.textContent = '';
+
+  for (const item of recent) {
+    const el = document.createElement('div');
+    el.className = 'tracker-item';
+
+    const info = document.createElement('div');
+    info.className = 'tracker-item-info';
+
+    const company = document.createElement('span');
+    company.className = 'tracker-item-company';
+    company.textContent = item.company || 'Unknown';
+
+    const title = document.createElement('span');
+    title.className = 'tracker-item-title';
+    title.textContent = item.title || '';
+
+    info.appendChild(company);
+    info.appendChild(title);
+
+    const date = document.createElement('span');
+    date.className = 'tracker-item-date';
+    date.textContent = new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+
+    el.appendChild(info);
+    el.appendChild(date);
+    listEl.appendChild(el);
+  }
+
+  // Check storage usage and warn
+  await checkStorageWarning();
+}
+
+async function addToTracker(jobData) {
+  const result = await chrome.storage.local.get(TRACKER_KEY);
+  const items = result[TRACKER_KEY] || [];
+
+  items.push({
+    company: jobData.company || 'Unknown',
+    title: jobData.title || '',
+    url: jobData.url || '',
+    date: new Date().toISOString(),
+  });
+
+  await chrome.storage.local.set({ [TRACKER_KEY]: items });
+  await loadTracker();
+}
+
+async function checkStorageWarning() {
+  const usage = await getStorageUsage();
+  const ratio = usage.used / usage.quota;
+  const warningEl = $('#tracker-warning');
+  if (warningEl) {
+    warningEl.hidden = ratio < STORAGE_WARNING_THRESHOLD;
+  }
+}
+
+function exportTrackerCSV() {
+  chrome.storage.local.get(TRACKER_KEY, (result) => {
+    const items = result[TRACKER_KEY] || [];
+    if (items.length === 0) return;
+
+    const header = 'Company,Title,URL,Date\n';
+    const rows = items.map(item =>
+      `"${(item.company || '').replace(/"/g, '""')}","${(item.title || '').replace(/"/g, '""')}","${item.url || ''}","${item.date || ''}"`
+    ).join('\n');
+
+    const csv = header + rows;
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `CoverCraft_Applications_${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  });
+}
+
 // ===== SCRAPING =====
 
-async function startScraping() {
-  // If we already have a draft with content, don't override it with scraping
-  const manualTitle = $('#manual-title')?.value?.trim();
-  const manualDesc = $('#manual-description')?.value?.trim();
-  if (manualTitle || manualDesc) {
-    // Draft was restored — keep showing manual input, skip scraping
-    return;
+async function startScraping(force = false) {
+  // If we already have a draft with content, don't override (unless forced by tab change or refresh)
+  if (!force) {
+    const manualTitle = $('#manual-title')?.value?.trim();
+    const manualDesc = $('#manual-description')?.value?.trim();
+    if (manualTitle || manualDesc) return;
   }
 
   // Show skeleton loading
@@ -513,6 +671,7 @@ async function handleGenerate() {
     currentResult = response.data;
     clearGeneratingState();
     saveResult(currentResult, jobData);
+    addToTracker(jobData);
 
     // Display the result with typewriter effect
     await typewriterEffect(letterText, currentResult.plainText, cursor);
