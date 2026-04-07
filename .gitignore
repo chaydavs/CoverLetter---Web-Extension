@@ -10,3 +10,6 @@ tests/
 CWS_SUBMISSION.md
 STORE_LISTING.md
 PROGRESS.md
+venv/
+__pycache__/
+*.pyc
