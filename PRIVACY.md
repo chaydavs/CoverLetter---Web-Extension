@@ -37,7 +37,7 @@ That's it. Two hops. No databases, no analytics services, no third parties beyon
 
 ## BYOK (Bring Your Own Key) mode
 
-If you use your own Anthropic API key, requests go **directly** to Anthropic's API — our proxy is bypassed entirely. Your key is stored locally in your browser with basic obfuscation (not encryption). We recommend using `chrome.storage.session` for ephemeral storage if security is a concern.
+**We highly recommend bringing your own API key.** Pave includes 7 free generations per day using our shared API, but for the best experience and unlimited usage, enter your own Anthropic API key in Settings. When using your own key, requests go **directly** to Anthropic's API — our proxy is bypassed entirely, giving you full privacy and no rate limits. Your key is stored locally in your browser.
 
 ## How to delete your data
 

@@ -639,6 +639,28 @@ textarea::placeholder, .input::placeholder { color: var(--text-muted); }
   padding: 8px 0;
 }
 
+/* === USAGE FOOTER === */
+.usage-footer {
+  padding: 16px 20px;
+  text-align: center;
+  border-top: 1px solid var(--border);
+}
+.usage-footer p {
+  font-size: 11px;
+  color: var(--text-soft);
+  line-height: 1.5;
+  margin: 0;
+}
+.usage-footer strong {
+  color: var(--text);
+  font-weight: 600;
+}
+.usage-footer a {
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 /* === MONOCHROME GLASS UTILITY === */
 .job-card, .letter-preview, .drop-zone, .settings-panel, .confirm-content, textarea, .input, .btn-secondary {
   backdrop-filter: blur(28px) saturate(200%);
