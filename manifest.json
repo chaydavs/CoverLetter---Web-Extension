@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Pave — AI Cover Letters in Seconds",
+  "name": "Pave",
   "version": "1.0.0",
   "description": "Click on any job posting. Get a tailored cover letter. Download as PDF. No login required.",
   "permissions": ["activeTab", "tabs", "storage", "scripting", "sidePanel"],

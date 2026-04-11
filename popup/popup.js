@@ -155,51 +155,6 @@ function setupEventListeners() {
   $('#regenerate-btn').addEventListener('click', handleGenerate);
   $('#edit-toggle').addEventListener('click', toggleEdit);
 
-  // Newsletter signup — sends to Supabase
-  const newsletterBtn = $('#newsletter-btn');
-  if (newsletterBtn) {
-    newsletterBtn.addEventListener('click', async () => {
-      const emailInput = $('#newsletter-email');
-      const email = emailInput?.value?.trim();
-      if (!email || !email.includes('@') || !email.includes('.')) return;
-
-      newsletterBtn.disabled = true;
-      newsletterBtn.textContent = '...';
-
-      try {
-        const SUPABASE_URL = 'SUPABASE_URL_PLACEHOLDER';
-        const SUPABASE_KEY = 'SUPABASE_KEY_PLACEHOLDER';
-
-        const res = await fetch(`${SUPABASE_URL}/rest/v1/subscribers`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'apikey': SUPABASE_KEY,
-            'Authorization': `Bearer ${SUPABASE_KEY}`,
-            'Prefer': 'return=minimal',
-          },
-          body: JSON.stringify({ email, source: 'extension', subscribed_at: new Date().toISOString() }),
-        });
-
-        if (res.ok || res.status === 201 || res.status === 409) {
-          $('#newsletter-form').hidden = true;
-          $('#newsletter-success').hidden = false;
-          chrome.storage.local.set({ pave_newsletter: email });
-        } else {
-          // Fallback: save locally if Supabase fails
-          chrome.storage.local.set({ pave_newsletter: email });
-          $('#newsletter-form').hidden = true;
-          $('#newsletter-success').hidden = false;
-        }
-      } catch {
-        // Offline fallback
-        chrome.storage.local.set({ pave_newsletter: email });
-        $('#newsletter-form').hidden = true;
-        $('#newsletter-success').hidden = false;
-      }
-    });
-  }
-
   // Tracker export
   const exportBtn = $('#export-tracker-btn');
   if (exportBtn) exportBtn.addEventListener('click', exportTrackerCSV);

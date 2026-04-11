@@ -660,6 +660,13 @@ textarea::placeholder, .input::placeholder { color: var(--text-muted); }
   text-decoration: underline;
   text-underline-offset: 2px;
 }
+.usage-privacy {
+  margin-top: 6px;
+  font-size: 10px;
+}
+.usage-privacy a {
+  color: var(--text-muted);
+}
 
 /* === MONOCHROME GLASS UTILITY === */
 .job-card, .letter-preview, .drop-zone, .settings-panel, .confirm-content, textarea, .input, .btn-secondary {
