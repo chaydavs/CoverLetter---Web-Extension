@@ -24,20 +24,13 @@ function notifyPanel(message) {
 }
 
 /** Notify side panel when user switches tabs or navigates to a new page */
-chrome.tabs.onActivated.addListener(async (activeInfo) => {
-  try {
-    const tab = await chrome.tabs.get(activeInfo.tabId);
-    notifyPanel({ type: 'TAB_CHANGED', payload: { url: tab.url || '' } });
-  } catch { /* tab may not exist */ }
+chrome.tabs.onActivated.addListener(() => {
+  notifyPanel({ type: 'TAB_CHANGED' });
 });
 
-chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
+chrome.tabs.onUpdated.addListener((_tabId, changeInfo) => {
   if (changeInfo.status === 'complete') {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      if (tabs[0]?.id === tabId) {
-        notifyPanel({ type: 'TAB_CHANGED', payload: { url: tabs[0].url || '' } });
-      }
-    });
+    notifyPanel({ type: 'TAB_CHANGED' });
   }
 });
 
