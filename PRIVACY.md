@@ -60,4 +60,4 @@ If we change this policy, we'll update the date at the top. For a Chrome extensi
 
 ## Contact
 
-For privacy questions: [your-email@example.com]
+For privacy questions: chaydav4@gmail.com

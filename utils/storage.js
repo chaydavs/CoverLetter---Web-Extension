@@ -147,7 +147,7 @@ export async function getStorageUsage() {
 }
 
 /**
- * Wipes all CoverCraft data from storage.
+ * Wipes all Pave data from storage.
  * @returns {Promise<void>}
  */
 export async function clearAll() {

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pave — Privacy Policy</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.7;
+      color: #1a1a1a;
+      background: #fafafa;
+      padding: 2rem 1rem;
+    }
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 12px;
+      padding: 3rem 2.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+    .updated {
+      color: #666;
+      font-size: 0.9rem;
+      margin-bottom: 2rem;
+    }
+    h2 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-top: 2rem;
+      margin-bottom: 0.5rem;
+      color: #111;
+    }
+    h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-top: 1.25rem;
+      margin-bottom: 0.25rem;
+    }
+    p, li {
+      font-size: 0.95rem;
+      color: #333;
+    }
+    p { margin-bottom: 0.75rem; }
+    ul {
+      margin: 0.5rem 0 1rem 1.5rem;
+    }
+    li { margin-bottom: 0.35rem; }
+    strong { color: #111; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+    }
+    th, td {
+      text-align: left;
+      padding: 0.6rem 0.75rem;
+      border-bottom: 1px solid #eee;
+    }
+    th {
+      font-weight: 600;
+      color: #555;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    a {
+      color: #111;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+    .contact {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #eee;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Privacy Policy</h1>
+    <p class="updated">Last updated: April 11, 2026</p>
+
+    <p>Pave is built with privacy as a core design principle. Here is exactly what happens with your data.</p>
+
+    <h2>What data we collect</h2>
+
+    <h3>Your resume</h3>
+    <ul>
+      <li>Stored <strong>locally</strong> in your browser's storage (<code>chrome.storage.local</code>)</li>
+      <li><strong>Never</strong> sent to our servers for storage</li>
+      <li>Only transmitted to generate a cover letter (see below)</li>
+    </ul>
+
+    <h3>Job descriptions</h3>
+    <ul>
+      <li>Scraped from the page you are viewing when you click the extension</li>
+      <li>Sent to our API proxy along with your resume <strong>only</strong> when you click "Generate"</li>
+      <li><strong>Not</strong> stored anywhere after the request completes</li>
+    </ul>
+
+    <h2>Where data is sent</h2>
+
+    <p>When you click "Generate Cover Letter," your resume text and the scraped job description are sent to:</p>
+
+    <ol>
+      <li><strong>Our Cloudflare Worker proxy</strong> &mdash; a thin relay that validates your request, forwards it to Claude, and streams the response back. It does <strong>not</strong> log, store, or inspect your resume or job data.</li>
+      <li><strong>Anthropic's Claude API</strong> &mdash; the AI that writes your cover letter. Per Anthropic's policy, API inputs are not used to train models.</li>
+    </ol>
+
+    <p>That is it. Two hops. No databases, no analytics services, no third parties beyond these two.</p>
+
+    <h2>What we do not do</h2>
+    <ul>
+      <li>We <strong>do not</strong> have user accounts, so we cannot identify you</li>
+      <li>We <strong>do not</strong> run analytics, tracking pixels, or cookies</li>
+      <li>We <strong>do not</strong> store your resume on any server</li>
+      <li>We <strong>do not</strong> log API request bodies (including your resume)</li>
+      <li>We <strong>do not</strong> sell, share, or monetize your data in any way</li>
+      <li>We <strong>do not</strong> load external scripts, fonts, or resources at runtime</li>
+    </ul>
+
+    <h2>BYOK (Bring Your Own Key) mode</h2>
+    <p>If you use your own Anthropic API key, requests go <strong>directly</strong> to Anthropic's API and our proxy is bypassed entirely. Your key is stored locally in your browser.</p>
+
+    <h2>How to delete your data</h2>
+    <ol>
+      <li>Open the Pave extension</li>
+      <li>Click the gear icon (Settings)</li>
+      <li>Click "Clear All Data"</li>
+    </ol>
+    <p>This removes your resume, preferences, and API key from your browser. There is nothing to delete on our servers because we never stored anything there.</p>
+
+    <h2>Third-party services</h2>
+    <table>
+      <thead>
+        <tr><th>Service</th><th>Purpose</th><th>Privacy Policy</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Anthropic (Claude API)</td>
+          <td>Generates cover letter text</td>
+          <td><a href="https://www.anthropic.com/privacy">anthropic.com/privacy</a></td>
+        </tr>
+        <tr>
+          <td>Cloudflare Workers</td>
+          <td>Hosts API proxy and LaTeX compiler</td>
+          <td><a href="https://www.cloudflare.com/privacypolicy/">cloudflare.com/privacypolicy</a></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Changes to this policy</h2>
+    <p>If we change this policy, we will update the date at the top.</p>
+
+    <div class="contact">
+      <h2>Contact</h2>
+      <p>For privacy questions: <a href="mailto:chaydav4@gmail.com">chaydav4@gmail.com</a></p>
+    </div>
+  </div>
+</body>
+</html>

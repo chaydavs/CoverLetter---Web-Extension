@@ -38,14 +38,14 @@ That's it. No account. No signup. No subscription.
 ### Setup
 
 ```
-git clone [repo]
-cd covercraft-ext
+git clone https://github.com/chaydavs/CoverLetter---Web-Extension.git
+cd CoverLetter---Web-Extension/covercraft-ext
 ```
 
 #### Load the extension
 1. Go to `chrome://extensions`
 2. Enable Developer Mode
-3. Click "Load unpacked" and select the `covercraft-ext/` folder
+3. Click "Load unpacked" and select the `covercraft-ext/` folder (the one containing `manifest.json`)
 4. Click the Pave icon on any job page
 
 #### Deploy the API proxy
@@ -86,15 +86,15 @@ User clicks extension
 
 - Vanilla JavaScript (no framework, no build step, instant loading)
 - Chrome Extension Manifest V3
-- Claude API (Sonnet 4) for generation
+- Claude API (Haiku 4.5) for generation
 - LaTeX for professional PDF typesetting
 - Cloudflare Workers for API proxy + LaTeX compilation
 
 ## Roadmap
 
-- [ ] Chrome Web Store listing
+- [x] Chrome Web Store listing
 - [ ] Firefox port
-- [ ] BYOK (bring your own API key) mode
+- [x] BYOK (bring your own API key) mode
 - [ ] Multiple resume profiles
 - [ ] Cover letter history
 - [ ] Custom tone with example text

@@ -1,5 +1,5 @@
 /**
- * Popup UI controller — the face of CoverCraft.
+ * Popup UI controller — the face of Pave.
  * State machine with 4 states: SETUP → READY → GENERATING → RESULT
  *
  * "Check if we have a resume. If not, show upload. If yes, scrape the page
@@ -217,7 +217,7 @@ function setupEventListeners() {
     showView('setup');
   }));
   $('#save-key-btn').addEventListener('click', handleSaveApiKey);
-  $('#clear-all-btn').addEventListener('click', () => showConfirm('Delete all CoverCraft data?', async () => {
+  $('#clear-all-btn').addEventListener('click', () => showConfirm('Delete all Pave data?', async () => {
     await clearAll();
     closeSettings();
     showView('setup');
@@ -541,7 +541,7 @@ function exportTrackerCSV() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `CoverCraft_Applications_${new Date().toISOString().split('T')[0]}.csv`;
+    a.download = `Pave_Applications_${new Date().toISOString().split('T')[0]}.csv`;
     a.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   });

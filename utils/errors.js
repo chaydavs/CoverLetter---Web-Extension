@@ -1,5 +1,5 @@
 /**
- * Centralized error system for CoverCraft.
+ * Centralized error system for Pave.
  * Every error has a machine-readable code and a human-friendly message.
  */
 
@@ -50,7 +50,7 @@ export const Errors = Object.freeze({
   },
   SCRAPE_LOGIN_REQUIRED: {
     code: 'SCRAPE_LOGIN_REQUIRED',
-    message: 'Please sign in to view this job first, then try CoverCraft again.',
+    message: 'Please sign in to view this job first, then try Pave again.',
   },
   SCRAPE_LISTING_PAGE: {
     code: 'SCRAPE_LISTING_PAGE',

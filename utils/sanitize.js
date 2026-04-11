@@ -1,5 +1,5 @@
 /**
- * Sanitization utilities for CoverCraft.
+ * Sanitization utilities for Pave.
  * All external content passes through these before rendering or processing.
  */
 
