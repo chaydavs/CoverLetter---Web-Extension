@@ -248,7 +248,11 @@ async function readStream(response, onChunk) {
     throw createError(Errors.API_INVALID_RESPONSE, 'Response is not valid LaTeX');
   }
 
-  return { latex: fullText.trim(), usage };
+  // Strip any text Claude may have output before \documentclass (causes blank first page)
+  const docStart = fullText.indexOf('\\documentclass');
+  const latex = docStart > 0 ? fullText.substring(docStart) : fullText;
+
+  return { latex: latex.trim(), usage };
 }
 
 /**
