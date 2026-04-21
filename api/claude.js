@@ -22,20 +22,19 @@ You MUST output ONLY valid LaTeX source code. No explanation, no markdown, no co
 
 Use this exact template structure:
 \\documentclass[11pt,letterpaper]{article}
-\\usepackage[margin=1in]{geometry}
+\\usepackage[margin=0.75in]{geometry}
 \\usepackage{parskip}
 \\usepackage{microtype}
 \\usepackage[T1]{fontenc}
 \\usepackage{lmodern}
 \\pagestyle{empty}
+\\raggedbottom
 
 \\begin{document}
-
+\\vspace*{-\\parskip}
 \\begin{flushright}
 [TODAY'S DATE - e.g., March 28, 2026]
 \\end{flushright}
-
-\\vspace{0.3em}
 
 Dear Hiring Manager,
 
@@ -56,14 +55,16 @@ WRITING RULES:
    - "professional": polished, formal, third-person-feeling even though it's first person
    - "conversational": warm, personable, shows personality while staying appropriate
    - "technical": leads with skills and technologies, uses industry terminology
-7. Match the requested length:
+7. Match the requested length, but ALWAYS ensure it fits on a SINGLE PAGE:
    - "short": 150-200 words, 2 tight paragraphs
    - "medium": 250-300 words, 3 paragraphs
    - "long": 350-400 words, 4 paragraphs
 8. NEVER fabricate experience. Only reference skills, companies, and achievements present in the resume.
 9. NEVER add LaTeX comments. No % comment lines and never use hypens, underscores, or other special characters in LaTeX commands or environments. Only use plain text in the content.
 10. Escape all LaTeX special characters in names, companies, and text: & % $ # _ { } ~ ^
-11. If the resume contains a name, use it in the signature. If no name is found, use "[Your Name]".`;
+11. If the resume contains a name, use it in the signature. If no name is found, use "[Your Name]".
+12. MANDATORY: The document MUST be exactly one page. NEVER use \\newpage, \\clearpage, \\vfill, or any command that could trigger a second page. Avoid excessive vertical spacing.
+13. MANDATORY: Do NOT add a blank line after \\begin{document}. \\begin{flushright} must be the very first token after \\begin{document}.`;
 
 
 /**
